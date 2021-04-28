@@ -41,7 +41,7 @@ class DBHandler(Handler):
                               process_name=record.processName,
                               message=message,
                               last_line=last_line)
-                raise
+                # raise
 
                 my_crud.insert(instances=new_log)
             except:
