@@ -1,6 +1,7 @@
-import sqlalchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 from .models import base
-from traceback import format_exc
+from traceback import print_exc
 
 
 class Crud:
@@ -24,10 +25,10 @@ class Crud:
         self.create_tables()
 
     def create_engine(self):
-        self.engine = sqlalchemy.create_engine(self.connection_string)
+        self.engine = create_engine(self.connection_string)
 
     def create_session(self):
-        self.session = sqlalchemy.orm.Session(bind=self.engine)
+        self.session = Session(bind=self.engine)
 
     def create_tables(self):
         base.metadata.create_all(self.engine)
@@ -39,6 +40,7 @@ class Crud:
             self.session.flush()
         except:
             self.session.rollback()
+            self.initiate()
             raise
 
     def __del__(self):
@@ -49,7 +51,7 @@ class Crud:
         try:
             self.session.close()
         except:
-            print(format_exc())
+            print_exc()
         else:
             self.session = None
 
@@ -57,7 +59,7 @@ class Crud:
         try:
             self.engine.dispose()
         except:
-            print(format_exc())
+            print_exc()
         else:
             self.engine = None
 
